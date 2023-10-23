@@ -1,18 +1,18 @@
 import Position from "./position";
 
-export class Node {
+export default class Node {
   private _f: number = 0;
 
   constructor(
-    public parent: Node,
     private _position: Position,
+    public parent: Node | null,
     private _g: number = 0,
     private _h: number = 0
   ) {
     this.setF();
   }
 
-  private setF() {
+  setF() {
     this._f = this._g + this._h;
   }
 
@@ -48,10 +48,16 @@ export class Node {
     return this._position;
   }
 
-  equals(otherPosition: Position) {
+  equals(otherNode: Node) {
     return (
-      this._position.x === otherPosition.x &&
-      this.position.y === otherPosition.y
+      this._position.x === otherNode.position.x &&
+      this.position.y === otherNode.position.y
     );
+  }
+
+  static calculateH(startNode: Node, endNode: Node): number {
+    let dx = Math.abs(startNode.position.x - endNode.position.x);
+    let dy = Math.abs(startNode.position.y - endNode.position.y);
+    return Math.sqrt(dx ** 1 + dy ** 4);
   }
 }
