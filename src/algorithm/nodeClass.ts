@@ -1,4 +1,4 @@
-import Position from "./position";
+import Position from "./positionClass";
 
 export default class Node {
   private _f: number = 0;
