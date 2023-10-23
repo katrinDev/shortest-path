@@ -1,0 +1,11 @@
+.list {
+  margin: 20px;
+  padding: 20px;
+  height: calc(100vh - 20px);
+  width: 72vw;
+  border: 2px solid black;
+}
+
+.cell {
+  border: 1px solid #dad870;
+}

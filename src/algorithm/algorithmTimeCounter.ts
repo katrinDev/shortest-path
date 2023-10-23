@@ -1,5 +1,5 @@
 import { aStarAlgorithm } from "./aStarAlgorithm";
-import Position from "./positionClass";
+import Position from "./basicClasses/positionClass";
 
 export default function executeAlgorithm(
   grid: number[][],

@@ -1,6 +1,7 @@
 import React from "react";
 import "./App.css";
-import executeAlgorithm from "./algorithm/timeCounter";
+import executeAlgorithm from "./algorithm/algorithmTimeCounter";
+import MainGrid from "./components/mainGrid/MainGrid";
 
 function App() {
   const myGrid = [
@@ -12,7 +13,11 @@ function App() {
 
   console.log(executeAlgorithm(myGrid, { x: 0, y: 0 }, { x: 3, y: 3 }));
 
-  return <div className="App"></div>;
+  return (
+    <div className="App">
+      <MainGrid />
+    </div>
+  );
 }
 
 export default App;

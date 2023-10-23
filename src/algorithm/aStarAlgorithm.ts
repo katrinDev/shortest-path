@@ -1,5 +1,5 @@
-import Node from "./nodeClass";
-import Position from "./positionClass";
+import Node from "./basicClasses/nodeClass";
+import Position from "./basicClasses/positionClass";
 
 export function aStarAlgorithm(
   grid: number[][],
