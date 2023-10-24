@@ -5,7 +5,8 @@ import Position from "../../algorithm/basicClasses/positionClass";
 import Button from "@material-ui/core/Button";
 import { Box, Container, Typography } from "@material-ui/core";
 import { arrayBuffer } from "stream/consumers";
-import { StartEndProps } from "../layout/Layout";
+import { observer } from "mobx-react-lite";
+import startAndEndPoints from "../../store/startAndEndPoints";
 
 interface RenderCellProps {
   columnIndex: number;
@@ -19,12 +20,7 @@ type CellsStyles = {
   cellStyle: React.CSSProperties;
 }[];
 
-export default function MainGrid({
-  startPoint,
-  setStartPoint,
-  endPoint,
-  setEndPoint,
-}: StartEndProps) {
+export default observer(function MainGrid() {
   const columnCount = 100;
   const rowCount = 100;
   const columnWidth = 15;
@@ -76,9 +72,9 @@ export default function MainGrid({
     columnIndex: number,
     style: React.CSSProperties
   ) => {
-    setStartPoint(new Position(rowIndex, columnIndex));
+    startAndEndPoints.changeStartPoint(rowIndex, columnIndex);
 
-    console.log({ startPoint });
+    console.log(JSON.stringify(startAndEndPoints.startPoint));
 
     changeStyles(rowIndex, columnIndex, style);
   };
@@ -119,4 +115,4 @@ export default function MainGrid({
       </Container>
     </>
   );
-}
+});

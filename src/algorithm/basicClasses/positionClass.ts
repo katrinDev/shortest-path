@@ -1,3 +1,5 @@
+import { makeAutoObservable } from "mobx";
+
 export default class Position {
   x: number;
   y: number;
@@ -5,5 +7,6 @@ export default class Position {
   constructor(x: number, y: number) {
     this.x = x;
     this.y = y;
+    makeAutoObservable(this);
   }
 }

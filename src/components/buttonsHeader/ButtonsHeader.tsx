@@ -1,13 +1,9 @@
 import { Box, Grid, Button, Typography } from "@material-ui/core";
 import Position from "../../algorithm/basicClasses/positionClass";
-import { StartEndProps } from "../layout/Layout";
+import startAndEndPoints from "../../store/startAndEndPoints";
+import { observer } from "mobx-react-lite";
 
-export default function ButtonsHeader({
-  startPoint,
-  setStartPoint,
-  endPoint,
-  setEndPoint,
-}: StartEndProps) {
+export default observer(function ButtonsHeader() {
   return (
     <Box style={{ margin: 15, marginTop: 30 }}>
       <Grid container spacing={2}>
@@ -19,10 +15,17 @@ export default function ButtonsHeader({
               marginRight: "30px",
             }}
           >
-            Start Point: {`[${startPoint.x},${startPoint.y}]`}
+            Start Point:{" "}
+            {`[${startAndEndPoints.startPoint.x},${startAndEndPoints.startPoint.y}]`}
           </Typography>
-          <Button variant="contained" color="primary">
-            Submit start
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => startAndEndPoints.submitStartPoint()}
+          >
+            {startAndEndPoints.isStartSubmitted
+              ? "Reset start"
+              : "Submit start"}
           </Button>
         </Grid>
         <Grid item xs={6}>
@@ -33,17 +36,19 @@ export default function ButtonsHeader({
               marginRight: "30px",
             }}
           >
-            End Point: {`[${endPoint.x},${endPoint.y}]`}
+            End Point:{" "}
+            {`[${startAndEndPoints.endPoint.x},${startAndEndPoints.endPoint.y}]`}
           </Typography>
           <Button
             variant="contained"
             color="primary"
             style={{ minWidth: "150px" }}
+            onClick={() => startAndEndPoints.sumbitEndPoint()}
           >
-            Submit end
+            {startAndEndPoints.isEndSubmitted ? "Reset end" : "Submit end"}
           </Button>
         </Grid>
       </Grid>
     </Box>
   );
-}
+});
