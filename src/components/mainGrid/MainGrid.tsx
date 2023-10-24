@@ -7,6 +7,7 @@ import { Box, Container, Typography } from "@material-ui/core";
 import { findByLabelText } from "@testing-library/react";
 import HideAppBar from "../appBar/HideAppBar";
 import ButtonsHeader from "../buttonsHeader/ButtonsHeader";
+import { arrayBuffer } from "stream/consumers";
 
 interface RenderCellProps {
   columnIndex: number;
@@ -14,6 +15,11 @@ interface RenderCellProps {
   rowIndex: number;
   style: React.CSSProperties;
 }
+
+type CellsStyles = {
+  position: string;
+  cellStyle: React.CSSProperties;
+}[];
 
 export default function MainGrid() {
   const columnCount = 100;
@@ -25,49 +31,61 @@ export default function MainGrid() {
     .fill(0)
     .map(() => Array(columnCount));
 
-  const [cellsStyles, setCellsStyles] = useState<{
-    [position: string]: React.CSSProperties;
-  }>({});
+  const [cellsStyles, setCellsStyles] = useState<CellsStyles>([]);
   const [startPoint, setStartPoint] = useState<Position>(new Position(0, 0));
   const [endPoint, setEndPoint] = useState<Position>(new Position(99, 99));
+
+  const changeStyles = (
+    rowIndex: number,
+    columnIndex: number,
+    style: React.CSSProperties
+  ) => {
+    const isExists = cellsStyles.some(
+      (item) => item.position === `${rowIndex}-${columnIndex}`
+    );
+    let newStylesArray: CellsStyles = cellsStyles;
+    if (!isExists) {
+      cellsStyles.push({
+        position: `${rowIndex}-${columnIndex}`,
+        cellStyle: { ...style, background: "green" },
+      });
+    }
+
+    newStylesArray = cellsStyles;
+
+    newStylesArray = newStylesArray.map((item) => {
+      if (
+        item.position !== `${rowIndex}-${columnIndex}` &&
+        item.cellStyle.background
+      ) {
+        const { background, ...rest } = item.cellStyle;
+        return {
+          ...item,
+          cellStyle: rest,
+        };
+      } else {
+        return item;
+      }
+    });
+    setCellsStyles(() => newStylesArray);
+  };
 
   const onCellClick = (
     rowIndex: number,
     columnIndex: number,
-    style: Object
+    style: React.CSSProperties
   ) => {
     setStartPoint(new Position(rowIndex, columnIndex));
 
     console.log({ startPoint });
 
-    setCellsStyles(() => ({
-      ...cellsStyles,
-      [`${rowIndex}-${columnIndex}`]: { ...style, backgroundColor: "green" },
-    }));
-
-    // setCellsStyles(() => {
-    //   const entries = Object.entries(cellsStyles);
-
-    //   const changedEntries = entries.map(([key, value]) => {
-    //     if (key === `${rowIndex}-${columnIndex}`) {
-    //       console.log(key);
-    //       return [key, { ...style, backgroundColor: "green" }];
-    //     } else {
-    //       if (value.backgroundColor) {
-    //         const { backgroundColor, ...rest } = value;
-    //         return [key, rest];
-    //       } else {
-    //         return [key, value];
-    //       }
-    //     }
-    //   });
-
-    //   return Object.fromEntries(changedEntries);
-    // });
+    changeStyles(rowIndex, columnIndex, style);
   };
 
   function renderCell({ columnIndex, key, rowIndex, style }: RenderCellProps) {
-    const cellStyle = cellsStyles[`${rowIndex}-${columnIndex}`] || style;
+    const cellStyle =
+      cellsStyles.find((item) => item.position === `${rowIndex}-${columnIndex}`)
+        ?.cellStyle || style;
 
     return (
       <div
