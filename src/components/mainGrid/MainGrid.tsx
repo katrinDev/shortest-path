@@ -1,10 +1,7 @@
 import { Grid, AutoSizer } from "react-virtualized";
-import { useState } from "react";
+import { useRef } from "react";
 import "./MainGrid.css";
-import Position from "../../algorithm/basicClasses/positionClass";
-import Button from "@material-ui/core/Button";
-import { Box, Container, Typography } from "@material-ui/core";
-import { arrayBuffer } from "stream/consumers";
+import { Container } from "@material-ui/core";
 import { observer } from "mobx-react-lite";
 import startAndEndPoints from "../../store/startAndEndPoints";
 
@@ -26,63 +23,22 @@ export default observer(function MainGrid() {
   const columnWidth = 15;
   const rowHeight = 15;
 
+  const gridRef = useRef<Grid>(null);
+
   const grid = Array(rowCount)
     .fill(0)
     .map(() => Array(columnCount));
 
-  const [cellsStyles, setCellsStyles] = useState<CellsStyles>([]);
-
-  const changeStyles = (
-    rowIndex: number,
-    columnIndex: number,
-    style: React.CSSProperties
-  ) => {
-    const isExists = cellsStyles.some(
-      (item) => item.position === `${rowIndex}-${columnIndex}`
-    );
-    let newStylesArray: CellsStyles = cellsStyles;
-    if (!isExists) {
-      cellsStyles.push({
-        position: `${rowIndex}-${columnIndex}`,
-        cellStyle: { ...style, background: "green" },
-      });
-    }
-
-    newStylesArray = cellsStyles;
-
-    newStylesArray = newStylesArray.map((item) => {
-      if (
-        item.position !== `${rowIndex}-${columnIndex}` &&
-        item.cellStyle.background
-      ) {
-        const { background, ...rest } = item.cellStyle;
-        return {
-          ...item,
-          cellStyle: rest,
-        };
-      } else {
-        return item;
-      }
-    });
-    setCellsStyles(() => newStylesArray);
-  };
-
-  const onCellClick = (
-    rowIndex: number,
-    columnIndex: number,
-    style: React.CSSProperties
-  ) => {
-    startAndEndPoints.changeStartPoint(rowIndex, columnIndex);
-
-    console.log(JSON.stringify(startAndEndPoints.startPoint));
-
-    changeStyles(rowIndex, columnIndex, style);
-  };
-
   function renderCell({ columnIndex, key, rowIndex, style }: RenderCellProps) {
-    const cellStyle =
-      cellsStyles.find((item) => item.position === `${rowIndex}-${columnIndex}`)
-        ?.cellStyle || style;
+    const start = startAndEndPoints.startPoint;
+    const end = startAndEndPoints.endPoint;
+
+    let cellStyle =
+      rowIndex === start.x && columnIndex === start.y
+        ? { ...style, background: "green" }
+        : rowIndex === end.x && columnIndex === end.y
+        ? { ...style, background: "orange" }
+        : style;
 
     return (
       <div
@@ -94,6 +50,30 @@ export default observer(function MainGrid() {
     );
   }
 
+  const onCellClick = (
+    rowIndex: number,
+    columnIndex: number,
+    style: React.CSSProperties
+  ) => {
+    let cellRerender: boolean = false;
+    let color: string = "";
+
+    if (!startAndEndPoints.isStartSubmitted) {
+      startAndEndPoints.changeStartPoint(rowIndex, columnIndex);
+
+      cellRerender = true;
+    } else if (!startAndEndPoints.isEndSubmitted) {
+      startAndEndPoints.changeEndPoint(rowIndex, columnIndex);
+
+      cellRerender = true;
+    }
+
+    if (cellRerender) {
+      gridRef.current?.recomputeGridSize({ rowIndex, columnIndex });
+      gridRef.current?.forceUpdate();
+    }
+  };
+
   return (
     <>
       <Container style={{ display: "flex", justifyContent: "center" }}>
@@ -101,6 +81,7 @@ export default observer(function MainGrid() {
           <AutoSizer>
             {({ width, height }) => (
               <Grid
+                ref={gridRef}
                 width={width}
                 height={height}
                 rowHeight={rowHeight}
