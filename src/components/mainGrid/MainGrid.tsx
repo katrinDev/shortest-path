@@ -4,10 +4,8 @@ import "./MainGrid.css";
 import Position from "../../algorithm/basicClasses/positionClass";
 import Button from "@material-ui/core/Button";
 import { Box, Container, Typography } from "@material-ui/core";
-import { findByLabelText } from "@testing-library/react";
-import HideAppBar from "../appBar/HideAppBar";
-import ButtonsHeader from "../buttonsHeader/ButtonsHeader";
 import { arrayBuffer } from "stream/consumers";
+import { StartEndProps } from "../layout/Layout";
 
 interface RenderCellProps {
   columnIndex: number;
@@ -21,7 +19,12 @@ type CellsStyles = {
   cellStyle: React.CSSProperties;
 }[];
 
-export default function MainGrid() {
+export default function MainGrid({
+  startPoint,
+  setStartPoint,
+  endPoint,
+  setEndPoint,
+}: StartEndProps) {
   const columnCount = 100;
   const rowCount = 100;
   const columnWidth = 15;
@@ -32,8 +35,6 @@ export default function MainGrid() {
     .map(() => Array(columnCount));
 
   const [cellsStyles, setCellsStyles] = useState<CellsStyles>([]);
-  const [startPoint, setStartPoint] = useState<Position>(new Position(0, 0));
-  const [endPoint, setEndPoint] = useState<Position>(new Position(99, 99));
 
   const changeStyles = (
     rowIndex: number,
@@ -99,25 +100,22 @@ export default function MainGrid() {
 
   return (
     <>
-      <Container component="main">
-        <ButtonsHeader startPoint={startPoint} endPoint={endPoint} />
-        <Container style={{ display: "flex", justifyContent: "center" }}>
-          <div className="list">
-            <AutoSizer>
-              {({ width, height }) => (
-                <Grid
-                  width={width}
-                  height={height}
-                  rowHeight={rowHeight}
-                  columnWidth={columnWidth}
-                  cellRenderer={renderCell}
-                  rowCount={grid.length}
-                  columnCount={grid[0].length}
-                />
-              )}
-            </AutoSizer>
-          </div>
-        </Container>
+      <Container style={{ display: "flex", justifyContent: "center" }}>
+        <div className="list">
+          <AutoSizer>
+            {({ width, height }) => (
+              <Grid
+                width={width}
+                height={height}
+                rowHeight={rowHeight}
+                columnWidth={columnWidth}
+                cellRenderer={renderCell}
+                rowCount={grid.length}
+                columnCount={grid[0].length}
+              />
+            )}
+          </AutoSizer>
+        </div>
       </Container>
     </>
   );

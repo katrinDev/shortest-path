@@ -1,15 +1,13 @@
 import { Box, Grid, Button, Typography } from "@material-ui/core";
 import Position from "../../algorithm/basicClasses/positionClass";
-
-type ButtonsHeaderProps = {
-  startPoint: Position;
-  endPoint: Position;
-};
+import { StartEndProps } from "../layout/Layout";
 
 export default function ButtonsHeader({
   startPoint,
+  setStartPoint,
   endPoint,
-}: ButtonsHeaderProps) {
+  setEndPoint,
+}: StartEndProps) {
   return (
     <Box style={{ margin: 15, marginTop: 30 }}>
       <Grid container spacing={2}>
