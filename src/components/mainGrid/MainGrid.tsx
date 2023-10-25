@@ -1,9 +1,10 @@
 import { Grid, AutoSizer } from "react-virtualized";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import "./MainGrid.css";
 import { Container } from "@material-ui/core";
 import { observer } from "mobx-react-lite";
 import startAndEndPoints from "../../store/startAndEndPoints";
+import obstacles from "../../store/obstacles";
 
 interface RenderCellProps {
   columnIndex: number;
@@ -12,10 +13,6 @@ interface RenderCellProps {
   style: React.CSSProperties;
 }
 
-type CellsStyles = {
-  position: string;
-  cellStyle: React.CSSProperties;
-}[];
 
 export default observer(function MainGrid() {
   const columnCount = 100;
@@ -33,11 +30,17 @@ export default observer(function MainGrid() {
     const start = startAndEndPoints.startPoint;
     const end = startAndEndPoints.endPoint;
 
+    const isAnObtacle = obstacles.obstacles.some(
+      (item) => item.x === rowIndex && item.y === columnIndex
+    );
+
     let cellStyle =
       rowIndex === start.x && columnIndex === start.y
-        ? { ...style, background: "green" }
+        ? { ...style, background: "green", border: 0 }
         : rowIndex === end.x && columnIndex === end.y
-        ? { ...style, background: "orange" }
+        ? { ...style, background: "#FF8210", border: 0 }
+        : isAnObtacle
+        ? { ...style, background: "#DF362D", border: 0 }
         : style;
 
     return (
@@ -64,6 +67,16 @@ export default observer(function MainGrid() {
       cellRerender = true;
     } else if (!startAndEndPoints.isEndSubmitted) {
       startAndEndPoints.changeEndPoint(rowIndex, columnIndex);
+
+      cellRerender = true;
+    } else if (!obstacles.areObstaclesSubmitted) {
+      const alreadyAnObtacle = obstacles.obstacles.some(
+        (item) => item.x === rowIndex && item.y === columnIndex
+      );
+
+      alreadyAnObtacle
+        ? obstacles.removeObstacle(rowIndex, columnIndex)
+        : obstacles.addObstacle(rowIndex, columnIndex);
 
       cellRerender = true;
     }

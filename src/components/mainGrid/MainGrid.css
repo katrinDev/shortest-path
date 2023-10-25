@@ -1,9 +1,9 @@
 .list {
   padding: 10px;
   height: calc(100vh - 20px);
-  width: 72vw;
+  width: 80vw;
 }
 
 .cell {
-  border: 1px solid #dad870;
+  border: 1px solid #d3d16a;
 }

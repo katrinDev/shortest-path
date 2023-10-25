@@ -15,7 +15,7 @@ export default function Layout() {
         <></>
       </HideAppBar>
 
-      <Container component="main">
+      <Container style={{ margin: "30 0", padding: "0" }}>
         <ButtonsHeader />
         <MainGrid />
       </Container>
