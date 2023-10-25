@@ -12,7 +12,7 @@ import Slide from "@material-ui/core/Slide";
 import { makeStyles } from "@material-ui/core/styles";
 import BuildIcon from "@material-ui/icons/Build";
 import obstacles from "../../store/obstacles";
-import { buildPath } from "../mainGrid/MainGrid";
+import { buildPath, clearObstacles, resetGrid } from "../mainGrid/MainGrid";
 
 const useStyles = makeStyles({ button: { fontWeight: 550, margin: "15px" } });
 
@@ -56,12 +56,16 @@ export default function HideAppBar(props: Props) {
                   <Button
                     color="inherit"
                     className={classes.button}
-                    onClick={() => obstacles.clearObstacles()}
+                    onClick={() => clearObstacles()}
                   >
-                    Clear Obstacles
+                    Reset Obstacles
                   </Button>
-                  <Button color="inherit" className={classes.button}>
-                    Clear Grid
+                  <Button
+                    color="inherit"
+                    className={classes.button}
+                    onClick={() => resetGrid()}
+                  >
+                    Reset Grid
                   </Button>
                   <Button
                     color="inherit"

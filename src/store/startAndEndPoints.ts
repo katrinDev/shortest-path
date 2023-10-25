@@ -13,17 +13,13 @@ class StartAndEndPoints {
   }
 
   changeStartPoint(x: number, y: number) {
-    if (!this.isStartSubmitted) {
-      this.startPoint.x = x;
-      this.startPoint.y = y;
-    }
+    this.startPoint.x = x;
+    this.startPoint.y = y;
   }
 
   changeEndPoint(x: number, y: number) {
-    if (this.isStartSubmitted && !this.isEndSubmitted) {
-      this.endPoint.x = x;
-      this.endPoint.y = y;
-    }
+    this.endPoint.x = x;
+    this.endPoint.y = y;
   }
 
   submitStartPoint() {

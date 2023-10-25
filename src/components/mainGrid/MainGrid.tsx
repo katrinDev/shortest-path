@@ -16,31 +16,8 @@ interface RenderCellProps {
 }
 
 let graphicalPath: (path: Position[] | null) => void;
-
-export const buildPath = () => {
-  const start = startAndEndPoints.startPoint;
-  const end = startAndEndPoints.endPoint;
-  const obstaclesArray = obstacles.obstacles;
-
-  let grid = [];
-
-  for (let i = 0; i < 100; i++) {
-    let row = [];
-    for (let j = 0; j < 100; j++) {
-      const isObstacle = obstaclesArray.some(
-        (item) => item.x === i && item.y === j
-      );
-      row.push(isObstacle ? 1 : 0);
-    }
-    grid.push(row);
-  }
-
-  const { result: path, timeTaken: time } = executeAlgorithm(grid, start, end);
-
-  console.log({ path, time });
-
-  graphicalPath(path);
-};
+export let clearObstacles: () => void;
+export let resetGrid: () => void;
 
 export default observer(function MainGrid() {
   const columnCount = 100;
@@ -58,7 +35,43 @@ export default observer(function MainGrid() {
   graphicalPath = (path: Position[] | null) => {
     setResultPath(path);
 
-    path?.forEach((point) => {
+    rerenderCellsOfArray(path);
+  };
+
+  clearObstacles = () => {
+    const obstaclesArray = obstacles.obstacles.slice();
+    console.log(JSON.stringify(obstaclesArray));
+    obstacles.clearObstacles();
+
+    console.log(JSON.stringify(obstaclesArray));
+
+    rerenderCellsOfArray(obstaclesArray);
+  };
+
+  resetGrid = () => {
+    const oldPath = resultPath;
+    setResultPath([]);
+
+    rerenderCellsOfArray(oldPath);
+
+    clearObstacles();
+
+    const oldStart = startAndEndPoints.startPoint;
+    startAndEndPoints.changeStartPoint(0, 0);
+    const newStart = startAndEndPoints.startPoint;
+
+    const oldEnd = startAndEndPoints.endPoint;
+    startAndEndPoints.changeEndPoint(99, 99);
+    const newEnd = startAndEndPoints.endPoint;
+
+    const rerenderCellsArray = [];
+    rerenderCellsArray.push(oldStart, newStart, oldEnd, newEnd);
+
+    rerenderCellsOfArray(rerenderCellsArray);
+  };
+
+  const rerenderCellsOfArray = (positions: Position[] | null): void => {
+    positions?.forEach((point) => {
       gridRef.current?.recomputeGridSize({
         rowIndex: point.x,
         columnIndex: point.y,
@@ -71,7 +84,7 @@ export default observer(function MainGrid() {
     const start = startAndEndPoints.startPoint;
     const end = startAndEndPoints.endPoint;
 
-    const isAnObtacle = obstacles.obstacles.some(
+    const isAnObstacle = obstacles.obstacles.some(
       (item) => item.x === rowIndex && item.y === columnIndex
     );
 
@@ -84,10 +97,10 @@ export default observer(function MainGrid() {
         ? { ...style, background: "green", border: 0 }
         : rowIndex === end.x && columnIndex === end.y
         ? { ...style, background: "#FF8210", border: 0 }
-        : isAnObtacle
+        : isAnObstacle
         ? { ...style, background: "#DF362D", border: 0 }
         : isPathPart
-        ? { ...style, background: "#81B622", border: 0 }
+        ? { ...style, background: "#59981A", border: 0 }
         : style;
 
     return (
@@ -157,3 +170,28 @@ export default observer(function MainGrid() {
     </>
   );
 });
+
+export const buildPath = () => {
+  const start = startAndEndPoints.startPoint;
+  const end = startAndEndPoints.endPoint;
+  const obstaclesArray = obstacles.obstacles;
+
+  let grid = [];
+
+  for (let i = 0; i < 100; i++) {
+    let row = [];
+    for (let j = 0; j < 100; j++) {
+      const isObstacle = obstaclesArray.some(
+        (item) => item.x === i && item.y === j
+      );
+      row.push(isObstacle ? 1 : 0);
+    }
+    grid.push(row);
+  }
+
+  const { result: path, timeTaken: time } = executeAlgorithm(grid, start, end);
+
+  console.log({ path, time });
+
+  graphicalPath(path);
+};
