@@ -15,7 +15,7 @@ import obstacles from "../../store/obstacles";
 import { buildPath, clearObstacles, resetGrid } from "../mainGrid/MainGrid";
 import { AlertsContext } from "../../context/alertsContext";
 
-const useStyles = makeStyles({ button: { fontWeight: 550, margin: "15px" } });
+const useStyles = makeStyles({ button: { fontWeight: 500, margin: "15px" } });
 
 interface Props {
   children: React.ReactElement;
@@ -77,13 +77,13 @@ export default function HideAppBar(props: Props) {
                 justifyContent="space-between"
                 alignItems="center"
               >
-                <Grid item xs={4}>
+                <Grid item xs={3}>
                   <Typography variant="h6">
                     The Shortest Path Searcher
                   </Typography>
                 </Grid>
 
-                <Grid item xs={4}>
+                <Grid item xs={5}>
                   <Button
                     color="inherit"
                     className={classes.button}
@@ -106,7 +106,7 @@ export default function HideAppBar(props: Props) {
                   >
                     Build Path
                   </Button>
-                  <BuildIcon style={{ marginTop: 18, fontSize: "small" }} />
+                  <BuildIcon style={{ marginTop: 20, fontSize: "small" }} />
                 </Grid>
               </Grid>
             </Toolbar>
