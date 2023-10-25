@@ -1,5 +1,5 @@
 import { Grid, AutoSizer } from "react-virtualized";
-import { useContext, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import "./MainGrid.css";
 import { Container, Snackbar } from "@material-ui/core";
 import { Alert, Color } from "@material-ui/lab";
@@ -30,6 +30,15 @@ export default observer(function MainGrid() {
   const gridRef = useRef<Grid>(null);
   const [resultPath, setResultPath] = useState<Position[] | null>([]);
   const { snackbarProps, setSnackbarProps } = useContext(AlertsContext);
+
+  useEffect(() => {
+    setSnackbarProps(() => ({
+      open: true,
+      severity: "success",
+      message:
+        "Nice to meet you! Please change the points and build the path :)",
+    }));
+  }, []);
 
   const grid = Array(rowCount)
     .fill(0)
