@@ -8,13 +8,11 @@ export default function executeAlgorithm(
 ) {
   const start = performance.now();
 
-  const resultPositions = aStarAlgorithm(grid, startPoint, endPoint);
+  const result = aStarAlgorithm(grid, startPoint, endPoint);
 
   const end = performance.now();
 
   const timeTaken = end - start;
-
-  const result = resultPositions?.map((pos) => [pos.x, pos.y]);
 
   return { result, timeTaken };
 }
