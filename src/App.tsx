@@ -1,13 +1,21 @@
 import React from "react";
 import "./App.css";
-import executeAlgorithm from "./algorithm/algorithmTimeCounter";
 import Layout from "./components/layout/Layout";
+import { AlertsProvider } from "./context/alertsContextProvider";
 
 function App() {
   return (
-    <div className="App">
-      <Layout />
-    </div>
+    <AlertsProvider
+      initialValue={{
+        open: false,
+        severity: "error",
+        message: "",
+      }}
+    >
+      <div className="App">
+        <Layout />
+      </div>
+    </AlertsProvider>
   );
 }
 

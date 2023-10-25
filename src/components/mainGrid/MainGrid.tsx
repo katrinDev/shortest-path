@@ -1,12 +1,14 @@
 import { Grid, AutoSizer } from "react-virtualized";
-import { useRef, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import "./MainGrid.css";
-import { Container } from "@material-ui/core";
+import { Container, Snackbar } from "@material-ui/core";
+import { Alert, Color } from "@material-ui/lab";
 import { observer } from "mobx-react-lite";
 import startAndEndPoints from "../../store/startAndEndPoints";
 import obstacles from "../../store/obstacles";
 import executeAlgorithm from "../../algorithm/algorithmTimeCounter";
 import Position from "../../algorithm/basicClasses/positionClass";
+import { AlertsContext } from "../../context/alertsContext";
 
 interface RenderCellProps {
   columnIndex: number;
@@ -15,7 +17,7 @@ interface RenderCellProps {
   style: React.CSSProperties;
 }
 
-let graphicalPath: (path: Position[] | null) => void;
+let graphicalPath: (path: Position[] | null, time: number) => void;
 export let clearObstacles: () => void;
 export let resetGrid: () => void;
 
@@ -27,15 +29,36 @@ export default observer(function MainGrid() {
 
   const gridRef = useRef<Grid>(null);
   const [resultPath, setResultPath] = useState<Position[] | null>([]);
+  const { snackbarProps, setSnackbarProps } = useContext(AlertsContext);
 
   const grid = Array(rowCount)
     .fill(0)
     .map(() => Array(columnCount));
 
-  graphicalPath = (path: Position[] | null) => {
-    setResultPath(path);
+  graphicalPath = (path: Position[] | null, time: number) => {
+    try {
+      if (path === null) {
+        throw new Error("Impossible to build a path");
+      }
 
-    rerenderCellsOfArray(path);
+      setResultPath(path);
+
+      rerenderCellsOfArray(path);
+
+      setSnackbarProps(() => ({
+        open: true,
+        severity: "info",
+        message: `This path construction took ${time.toFixed(2)} ms`,
+      }));
+    } catch (err: any) {
+      console.log(err);
+
+      setSnackbarProps(() => ({
+        open: true,
+        severity: "error",
+        message: `${err.message}`,
+      }));
+    }
   };
 
   clearObstacles = () => {
@@ -147,6 +170,14 @@ export default observer(function MainGrid() {
     }
   };
 
+  const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setSnackbarProps(() => ({ ...snackbarProps, open: false }));
+  };
+
   return (
     <>
       <Container style={{ display: "flex", justifyContent: "center" }}>
@@ -166,6 +197,22 @@ export default observer(function MainGrid() {
             )}
           </AutoSizer>
         </div>
+        {
+          <Snackbar
+            open={snackbarProps.open}
+            autoHideDuration={7000}
+            onClose={handleClose}
+          >
+            <Alert
+              onClose={handleClose}
+              variant="filled"
+              severity={snackbarProps.severity}
+              style={{ width: "100%", fontSize: "medium", fontWeight: "bold" }}
+            >
+              {snackbarProps.message}
+            </Alert>
+          </Snackbar>
+        }
       </Container>
     </>
   );
@@ -193,5 +240,5 @@ export const buildPath = () => {
 
   console.log({ path, time });
 
-  graphicalPath(path);
+  graphicalPath(path, time);
 };
