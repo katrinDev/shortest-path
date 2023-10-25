@@ -200,7 +200,7 @@ export default observer(function MainGrid() {
         {
           <Snackbar
             open={snackbarProps.open}
-            autoHideDuration={7000}
+            autoHideDuration={6000}
             onClose={handleClose}
           >
             <Alert

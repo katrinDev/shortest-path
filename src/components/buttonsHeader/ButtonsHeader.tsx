@@ -4,6 +4,8 @@ import obstacles from "../../store/obstacles";
 import { observer } from "mobx-react-lite";
 import PieChartIcon from "@material-ui/icons/PieChart";
 import { makeStyles } from "@material-ui/core/styles";
+import { useContext } from "react";
+import { AlertsContext } from "../../context/alertsContext";
 
 const useStyles = makeStyles({
   button: { fontWeight: 550, marginLeft: "30px" },
@@ -12,6 +14,43 @@ const useStyles = makeStyles({
 
 export default observer(function ButtonsHeader() {
   const classes = useStyles();
+
+  const { snackbarProps, setSnackbarProps } = useContext(AlertsContext);
+
+  const onClickStartButton = () => {
+    if (startAndEndPoints.isEndSubmitted && obstacles.areObstaclesSubmitted) {
+      startAndEndPoints.submitStartPoint();
+    } else {
+      showWarning();
+    }
+  };
+
+  const onClickEndButton = () => {
+    if (startAndEndPoints.isStartSubmitted && obstacles.areObstaclesSubmitted) {
+      startAndEndPoints.sumbitEndPoint();
+    } else {
+      showWarning();
+    }
+  };
+
+  const onClickObstaclesButton = () => {
+    if (
+      startAndEndPoints.isStartSubmitted &&
+      startAndEndPoints.isEndSubmitted
+    ) {
+      obstacles.submitObstacles();
+    } else {
+      showWarning();
+    }
+  };
+
+  const showWarning = () => {
+    setSnackbarProps(() => ({
+      open: true,
+      severity: "warning",
+      message: "Please submit your previous changes first",
+    }));
+  };
 
   return (
     <Box style={{ margin: 30 }}>
@@ -25,7 +64,7 @@ export default observer(function ButtonsHeader() {
             variant="contained"
             color="primary"
             className={classes.button}
-            onClick={() => startAndEndPoints.submitStartPoint()}
+            onClick={onClickStartButton}
           >
             {startAndEndPoints.isStartSubmitted
               ? "Change start"
@@ -42,7 +81,7 @@ export default observer(function ButtonsHeader() {
             color="primary"
             className={classes.button}
             style={{ minWidth: "150px" }}
-            onClick={() => startAndEndPoints.sumbitEndPoint()}
+            onClick={onClickEndButton}
           >
             {startAndEndPoints.isEndSubmitted ? "Change end" : "Submit end"}
           </Button>
@@ -54,7 +93,7 @@ export default observer(function ButtonsHeader() {
             color="primary"
             className={classes.button}
             style={{ minWidth: "150px" }}
-            onClick={() => obstacles.submitObstacles()}
+            onClick={onClickObstaclesButton}
           >
             {obstacles.areObstaclesSubmitted
               ? "Change Obstacles"

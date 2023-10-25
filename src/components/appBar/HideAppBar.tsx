@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import AppBar from "@material-ui/core/AppBar";
 import {
   Toolbar,
@@ -13,6 +13,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import BuildIcon from "@material-ui/icons/Build";
 import obstacles from "../../store/obstacles";
 import { buildPath, clearObstacles, resetGrid } from "../mainGrid/MainGrid";
+import { AlertsContext } from "../../context/alertsContext";
 
 const useStyles = makeStyles({ button: { fontWeight: 550, margin: "15px" } });
 
@@ -33,6 +34,36 @@ function HideOnScroll(props: Props) {
 
 export default function HideAppBar(props: Props) {
   const classes = useStyles();
+
+  const { snackbarProps, setSnackbarProps } = useContext(AlertsContext);
+
+  const onClickResetObstacles = () => {
+    if (obstacles.obstacles.length === 0) {
+      setSnackbarProps(() => ({
+        open: true,
+        severity: "info",
+        message: "There are no obstacles on the grid",
+      }));
+    } else {
+      clearObstacles();
+
+      setSnackbarProps(() => ({
+        open: true,
+        severity: "success",
+        message: "Obstacles were reset successfully",
+      }));
+    }
+  };
+
+  const onClickResetGrid = () => {
+    resetGrid();
+    setSnackbarProps(() => ({
+      open: true,
+      severity: "success",
+      message: "Grid was reset successfully",
+    }));
+  };
+
   return (
     <>
       <React.Fragment>
@@ -56,14 +87,14 @@ export default function HideAppBar(props: Props) {
                   <Button
                     color="inherit"
                     className={classes.button}
-                    onClick={() => clearObstacles()}
+                    onClick={onClickResetObstacles}
                   >
                     Reset Obstacles
                   </Button>
                   <Button
                     color="inherit"
                     className={classes.button}
-                    onClick={() => resetGrid()}
+                    onClick={onClickResetGrid}
                   >
                     Reset Grid
                   </Button>

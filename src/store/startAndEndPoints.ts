@@ -5,8 +5,8 @@ class StartAndEndPoints {
   startPoint = new Position(0, 0);
   endPoint = new Position(99, 99);
 
-  isStartSubmitted: boolean = false;
-  isEndSubmitted: boolean = false;
+  isStartSubmitted: boolean = true;
+  isEndSubmitted: boolean = true;
 
   constructor() {
     makeAutoObservable(this);

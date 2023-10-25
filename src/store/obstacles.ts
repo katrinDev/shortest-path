@@ -3,7 +3,7 @@ import Position from "../algorithm/basicClasses/positionClass";
 
 class Obstacles {
   obstacles: Position[] = [];
-  areObstaclesSubmitted: boolean = false;
+  areObstaclesSubmitted: boolean = true;
   constructor() {
     makeAutoObservable(this);
   }
