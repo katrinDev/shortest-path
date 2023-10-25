@@ -2,7 +2,6 @@ import { Box, Grid, Button, Typography } from "@material-ui/core";
 import startAndEndPoints from "../../store/startAndEndPoints";
 import obstacles from "../../store/obstacles";
 import { observer } from "mobx-react-lite";
-import PieChartIcon from "@material-ui/icons/PieChart";
 import { makeStyles } from "@material-ui/core/styles";
 import { useContext } from "react";
 import { AlertsContext } from "../../context/alertsContext";
