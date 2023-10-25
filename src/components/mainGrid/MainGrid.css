@@ -1,7 +1,6 @@
 .list {
-  padding: 10px;
   height: calc(100vh - 20px);
-  width: 80vw;
+  width: 100vw;
 }
 
 .cell {

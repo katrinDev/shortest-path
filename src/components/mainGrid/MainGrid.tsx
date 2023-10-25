@@ -189,7 +189,7 @@ export default observer(function MainGrid() {
 
   return (
     <>
-      <Container style={{ display: "flex", justifyContent: "center" }}>
+      <Container style={{ display: "flex" }}>
         <div className="list">
           <AutoSizer>
             {({ width, height }) => (

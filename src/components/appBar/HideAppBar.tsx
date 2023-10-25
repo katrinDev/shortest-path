@@ -70,46 +70,42 @@ export default function HideAppBar(props: Props) {
         <CssBaseline />
         <HideOnScroll {...props}>
           <AppBar>
-            <Toolbar>
-              <Grid
-                container
-                spacing={2}
-                justifyContent="space-between"
-                alignItems="center"
-              >
-                <Grid item xs={3}>
-                  <Typography variant="h6">
-                    The Shortest Path Searcher
-                  </Typography>
-                </Grid>
-
-                <Grid item xs={5}>
-                  <Button
-                    color="inherit"
-                    className={classes.button}
-                    onClick={onClickResetObstacles}
-                  >
-                    Reset Obstacles
-                  </Button>
-                  <Button
-                    color="inherit"
-                    className={classes.button}
-                    onClick={onClickResetGrid}
-                  >
-                    Reset Grid
-                  </Button>
-                  <Button
-                    color="inherit"
-                    className={classes.button}
-                    style={{ marginRight: 0 }}
-                    onClick={() => buildPath()}
-                  >
-                    Build Path
-                  </Button>
-                  <BuildIcon style={{ marginTop: 20, fontSize: "small" }} />
-                </Grid>
+            <Grid
+              container
+              spacing={2}
+              justifyContent="space-between"
+              alignItems="center"
+            >
+              <Grid item xs={3}>
+                <Typography variant="h6">The Shortest Path Searcher</Typography>
               </Grid>
-            </Toolbar>
+
+              <Grid item xs={5}>
+                <Button
+                  color="inherit"
+                  className={classes.button}
+                  onClick={onClickResetObstacles}
+                >
+                  Reset Obstacles
+                </Button>
+                <Button
+                  color="inherit"
+                  className={classes.button}
+                  onClick={onClickResetGrid}
+                >
+                  Reset Grid
+                </Button>
+                <Button
+                  color="inherit"
+                  className={classes.button}
+                  style={{ marginRight: 0 }}
+                  onClick={() => buildPath()}
+                >
+                  Build Path
+                </Button>
+                <BuildIcon style={{ marginTop: 20, fontSize: "small" }} />
+              </Grid>
+            </Grid>
           </AppBar>
         </HideOnScroll>
         <Toolbar />
