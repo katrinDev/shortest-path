@@ -53,7 +53,7 @@ export default observer(function ButtonsHeader() {
 
   return (
     <Box style={{ margin: 30 }}>
-      <Grid container justifyContent="space-around">
+      <Grid container justifyContent="space-between" alignItems="flex-end">
         <Grid item xs={4}>
           <Typography variant="body1" className={classes.typoButtons}>
             Start Point:{" "}
@@ -90,7 +90,7 @@ export default observer(function ButtonsHeader() {
           <Button
             variant="contained"
             color="primary"
-            // className={classes.button}
+            className={classes.button}
             style={{ minWidth: "150px" }}
             onClick={onClickObstaclesButton}
           >

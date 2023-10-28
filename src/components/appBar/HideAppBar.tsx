@@ -75,12 +75,13 @@ export default function HideAppBar(props: Props) {
               spacing={2}
               justifyContent="space-between"
               alignItems="center"
+              wrap="nowrap"
             >
-              <Grid item xs={3}>
+              <Grid item xs={5} md={3}>
                 <Typography variant="h6">The Shortest Path Searcher</Typography>
               </Grid>
 
-              <Grid item xs={5}>
+              <Grid item xs={7} md={5}>
                 <Button
                   color="inherit"
                   className={classes.button}
